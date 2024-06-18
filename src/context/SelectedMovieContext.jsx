@@ -7,6 +7,8 @@ const KEY = `237c39d7`;
 
 function SelectedMovieProvider({ children }) {
   const [selectedId, setSelectedId] = useState(null);
+  const [selectedMovieData, setSelectedMovieData] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleSelectedId(id) {
     setSelectedId((selectedId) => (selectedId === id ? null : id));
@@ -19,20 +21,34 @@ function SelectedMovieProvider({ children }) {
 
   useEffect(() => {
     async function FetchDetail() {
-      const res = await fetch(
-        `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
-      );
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+        );
 
-      const data = await res.json();
+        const data = await res.json();
 
-      console.log(data);
+        // console.log(data);
+        setSelectedMovieData(data);
+      } catch (error) {
+        console.log(error, error.message);
+      } finally {
+        setIsLoading(false);
+      }
     }
     FetchDetail();
   }, [selectedId]);
 
   return (
     <SelectedMovieContext.Provider
-      value={{ selectedId, handleSelectedId, handleBtnClose }}
+      value={{
+        selectedId,
+        handleSelectedId,
+        handleBtnClose,
+        selectedMovieData,
+        isLoading,
+      }}
     >
       {children}
     </SelectedMovieContext.Provider>
