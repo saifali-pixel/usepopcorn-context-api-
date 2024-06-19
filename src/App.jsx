@@ -16,57 +16,60 @@ import Loader from "./components/Loader";
 import ErrorMsg from "./components/ErrorMsg";
 import { useSelectedId } from "./context/SelectedMovieContext";
 import MovieDetails from "./components/MovieDetails";
+// import { useSearchQuery } from "./context/QueryContext";
 
 const KEY = `237c39d7`;
 
 export default function App() {
-  const [query, setQuery] = useState("");
-  const { dispatch, status, errorMsg } = useMovies();
+  // const { dispatch, status, errorMsg } = useMovies();
+  const { status, errorMsg } = useMovies();
+
   const { selectedId } = useSelectedId();
+  // const { query } = useSearchQuery();
 
-  useEffect(() => {
-    const controller = new AbortController();
-    async function Fetch() {
-      try {
-        dispatch({ type: "loadingData" });
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-          { signal: controller.signal }
-        );
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //   async function Fetch() {
+  //     try {
+  //       dispatch({ type: "loadingData" });
+  //       const res = await fetch(
+  //         `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+  //         { signal: controller.signal }
+  //       );
 
-        if (!res.ok) throw new Error("Failed to fetch");
+  //       if (!res.ok) throw new Error("Failed to fetch");
 
-        const data = await res.json();
+  //       const data = await res.json();
 
-        if (data.Response === "False") throw new Error("⛔ Movie not found!");
+  //       if (data.Response === "False") throw new Error("⛔ Movie not found!");
 
-        dispatch({ type: "receivedData", payload: data.Search });
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          dispatch({ type: "error", payload: error.message });
-        }
-      }
-    }
+  //       dispatch({ type: "receivedData", payload: data.Search });
+  //     } catch (error) {
+  //       if (error.name !== "AbortError") {
+  //         dispatch({ type: "error", payload: error.message });
+  //       }
+  //     }
+  //   }
 
-    if (!query.length) {
-      dispatch({ type: "noQuery", payload: [] });
-      return;
-    }
+  //   if (!query.length) {
+  //     dispatch({ type: "noQuery", payload: [] });
+  //     return;
+  //   }
 
-    if (query.length >= 3) {
-      Fetch();
-    }
+  //   if (query.length >= 3) {
+  //     Fetch();
+  //   }
 
-    return () => {
-      controller.abort();
-    };
-  }, [query, dispatch]);
+  //   return () => {
+  //     controller.abort();
+  //   };
+  // }, [query, dispatch]);
 
   return (
     <>
       <NavBar>
         <Logo />
-        <Search query={query} setQuery={setQuery} />
+        <Search />
         <NumResult />
       </NavBar>
 

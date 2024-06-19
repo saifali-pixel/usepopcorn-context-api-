@@ -1,5 +1,9 @@
+import { useSearchQuery } from "../context/QueryContext";
+
 /* eslint-disable react/prop-types */
-function Search({ query, setQuery }) {
+function Search() {
+  const { query, setQuery } = useSearchQuery();
+
   return (
     <input
       className="search"

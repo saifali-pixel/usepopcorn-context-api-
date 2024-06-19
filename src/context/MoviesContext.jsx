@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
+import { useSearchQuery } from "./QueryContext";
 
 // const tempMovieData = [
 //   {
@@ -27,6 +29,8 @@ import { createContext, useContext, useReducer } from "react";
 // ];
 
 const movieContext = createContext();
+
+const KEY = `237c39d7`;
 
 function reducer(state, action) {
   switch (action.type) {
@@ -62,6 +66,46 @@ function MoviesContextProvider({ children }) {
     status: null,
     errorMsg: "",
   });
+
+  const { query } = useSearchQuery();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    async function Fetch() {
+      try {
+        dispatch({ type: "loadingData" });
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+          { signal: controller.signal }
+        );
+
+        if (!res.ok) throw new Error("Failed to fetch");
+
+        const data = await res.json();
+
+        if (data.Response === "False") throw new Error("⛔ Movie not found!");
+
+        dispatch({ type: "receivedData", payload: data.Search });
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          dispatch({ type: "error", payload: error.message });
+        }
+      }
+    }
+
+    if (!query.length) {
+      dispatch({ type: "noQuery", payload: [] });
+      return;
+    }
+
+    if (query.length >= 3) {
+      Fetch();
+    }
+
+    return () => {
+      controller.abort();
+    };
+  }, [query, dispatch]);
 
   return (
     <movieContext.Provider value={{ movies, dispatch, status, errorMsg }}>
