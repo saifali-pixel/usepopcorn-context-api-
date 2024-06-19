@@ -1,6 +1,13 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useReducer,
+} from "react";
 
 // const tempWatchedData = [
 //   {
@@ -27,40 +34,54 @@ import { createContext, useContext, useReducer } from "react";
 
 const WatchContext = createContext();
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "addmovie":
-      return { ...state, watched: [...state.watched, action.payload] };
+// function reducer(state, action) {
+//   switch (action.type) {
+//     case "add":
+//       return { ...state, watched: [...state.watched, action.payload] };
 
-    case "deleting/movie":
-      return {
-        ...state,
-        watched: state.watched.filter(
-          (movie) => movie.imdbID !== action.payload
-        ),
-      };
+//     case "del":
+//       return {
+//         ...state,
+//         watched: state.watched.filter(
+//           (movie) => movie.imdbID !== action.payload
+//         ),
+//       };
 
-    default:
-      break;
-  }
-}
+//     default:
+//       break;
+//   }
+// }
 
 function WatchContextProvider({ children }) {
-  const [{ watched }, dispatch] = useReducer(reducer, {
-    watched: [],
+  // const [{ watched }, dispatch] = useReducer(reducer, {
+  //   watched: function () {
+  //     const data = localStorage.getItem("watched");
+  //     return JSON.parse(data);
+  //   },
+  // });
+
+  const [watched, setWatched] = useState(function () {
+    const data = localStorage.getItem("watched");
+    return JSON.parse(data);
   });
 
   function deleteWachedMovie(id) {
-    dispatch({ type: "deleting/movie", payload: id });
+    setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
+    // dispatch({ type: "del", payload: id });
   }
 
   function handleAddMovie(movie) {
-    dispatch({ type: "addmovie", payload: movie });
+    setWatched((watched) => [...watched, movie]);
+    // dispatch({ type: "add", payload: movie });
   }
+
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
 
   return (
     <WatchContext.Provider
-      value={{ watched, dispatch, deleteWachedMovie, handleAddMovie }}
+      value={{ watched, deleteWachedMovie, handleAddMovie }}
     >
       {children}
     </WatchContext.Provider>

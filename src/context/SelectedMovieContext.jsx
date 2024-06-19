@@ -1,6 +1,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const SelectedMovieContext = createContext();
 const KEY = `237c39d7`;
@@ -14,9 +20,16 @@ function SelectedMovieProvider({ children }) {
     setSelectedId((selectedId) => (selectedId === id ? null : id));
   }
 
-  function handleBtnClose() {
-    setSelectedId(null);
-  }
+  const handleBtnClose = useCallback(
+    function () {
+      setSelectedId(null);
+    },
+    [setSelectedId]
+  );
+
+  // const handleBtnClose = function () {
+  //   setSelectedId(null);
+  // };
   // console.log(selectedId);
 
   useEffect(() => {

@@ -9,14 +9,14 @@ import { QueryContextProvider } from "./context/QueryContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <QueryContextProvider>
-      <MoviesContextProvider>
-        <WatchContextProvider>
-          <SelectedMovieProvider>
+    <SelectedMovieProvider>
+      <QueryContextProvider>
+        <MoviesContextProvider>
+          <WatchContextProvider>
             <App />
-          </SelectedMovieProvider>
-        </WatchContextProvider>
-      </MoviesContextProvider>
-    </QueryContextProvider>
+          </WatchContextProvider>
+        </MoviesContextProvider>
+      </QueryContextProvider>
+    </SelectedMovieProvider>
   </React.StrictMode>
 );

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelectedId } from "../context/SelectedMovieContext";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
@@ -33,12 +33,43 @@ function MovieDetails() {
     const movie = { ...selectedMovieData, userRating };
     handleAddMovie(movie);
     // dispatch({ type: "addmovie", payload: movie });
+
     handleBtnClose();
   }
 
   const rated = watched.find((movie) =>
     movie.imdbID === selectedId ? movie.userRating : null
   );
+
+  useEffect(() => {
+    if (!title) return;
+    // document.title = `MOVIE | ${selectedMovieData.Title}`;
+    document.title = `Movie | ${title}`;
+
+    return () => {
+      document.title = "usePopcorn";
+    };
+  }, [selectedMovieData, title]);
+
+  //KEY Event
+  useEffect(() => {
+    function keyEvent(e) {
+      if (e.key === "Escape") handleBtnClose();
+      // console.log("huugg");
+    }
+    document.addEventListener("keydown", keyEvent);
+
+    return () => {
+      document.removeEventListener("keydown", keyEvent);
+    };
+  }, [handleBtnClose]);
+
+  //addtolocalstorage
+  // useEffect(() => {
+  //   const movie = { ...selectedMovieData, userRating };
+
+  //   localStorage.setItem("watch", JSON.stringify([movie]));
+  // }, [selectedMovieData, userRating]);
 
   return (
     <div className="details">

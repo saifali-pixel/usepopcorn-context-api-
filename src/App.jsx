@@ -24,7 +24,7 @@ export default function App() {
   // const { dispatch, status, errorMsg } = useMovies();
   const { status, errorMsg } = useMovies();
 
-  const { selectedId } = useSelectedId();
+  const { selectedId, handleBtnClose } = useSelectedId();
   // const { query } = useSearchQuery();
 
   // useEffect(() => {

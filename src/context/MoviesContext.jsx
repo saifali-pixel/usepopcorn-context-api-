@@ -3,6 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useReducer } from "react";
 import { useSearchQuery } from "./QueryContext";
+import { useSelectedId } from "./SelectedMovieContext";
 
 // const tempMovieData = [
 //   {
@@ -68,6 +69,7 @@ function MoviesContextProvider({ children }) {
   });
 
   const { query } = useSearchQuery();
+  const { handleBtnClose } = useSelectedId();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -95,6 +97,7 @@ function MoviesContextProvider({ children }) {
 
     if (!query.length) {
       dispatch({ type: "noQuery", payload: [] });
+      handleBtnClose();
       return;
     }
 
@@ -105,7 +108,7 @@ function MoviesContextProvider({ children }) {
     return () => {
       controller.abort();
     };
-  }, [query, dispatch]);
+  }, [query, dispatch, handleBtnClose]);
 
   return (
     <movieContext.Provider value={{ movies, dispatch, status, errorMsg }}>
