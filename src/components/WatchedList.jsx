@@ -1,5 +1,9 @@
+import { useWacthedMovie } from "../context/WatchContext";
+
 /* eslint-disable react/prop-types */
 function WatchedList({ movie }) {
+  const { deleteWachedMovie } = useWacthedMovie();
+  // console.log(movie);
   return (
     <li key={movie.imdbID}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
@@ -15,9 +19,16 @@ function WatchedList({ movie }) {
         </p>
         <p>
           <span>⏳</span>
-          <span>{movie.runtime} min</span>
+          <span>{movie.Runtime} </span>
         </p>
       </div>
+
+      <button
+        className="btn-delete"
+        onClick={() => deleteWachedMovie(movie.imdbID)}
+      >
+        X
+      </button>
     </li>
   );
 }

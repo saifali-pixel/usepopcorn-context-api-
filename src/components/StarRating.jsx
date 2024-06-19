@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
-function StarRating() {
+function StarRating({ userrating }) {
   const [rating, setRating] = useState(0);
   const [temprating, setTemprating] = useState(0);
 
   function handleRating(rating) {
     setRating(rating);
+    userrating(rating);
   }
 
   return (

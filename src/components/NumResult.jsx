@@ -10,7 +10,7 @@ function NumResult() {
       Found{" "}
       <strong>
         {/* {movies?.length} */}
-        {errorMsg ? 0 : movies?.length || ""}
+        {errorMsg ? 0 : movies?.length || 0}
       </strong>{" "}
       results
     </p>

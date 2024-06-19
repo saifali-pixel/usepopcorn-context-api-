@@ -1,11 +1,15 @@
 /* eslint-disable no-unused-vars */
 
+import { useState } from "react";
 import { useSelectedId } from "../context/SelectedMovieContext";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
+import { useWacthedMovie } from "../context/WatchContext";
 
 function MovieDetails() {
   const { handleBtnClose, selectedMovieData, isLoading } = useSelectedId();
+
+  const { handleAddMovie, watched } = useWacthedMovie();
 
   const {
     Title: title,
@@ -19,6 +23,23 @@ function MovieDetails() {
     Director: director,
     Genre: genre,
   } = selectedMovieData;
+
+  const [userRating, setUserRating] = useState(null);
+  // console.log(userRating);
+
+  const { selectedId } = useSelectedId();
+
+  function handleAddWatched() {
+    const movie = { ...selectedMovieData, userRating };
+    handleAddMovie(movie);
+    // dispatch({ type: "addmovie", payload: movie });
+    handleBtnClose();
+  }
+
+  const rated = watched.find((movie) =>
+    movie.imdbID === selectedId ? movie.userRating : null
+  );
+
   return (
     <div className="details">
       {isLoading ? (
@@ -46,7 +67,19 @@ function MovieDetails() {
 
           <section>
             <div className="rating">
-              <StarRating />
+              {rated?.userRating ? (
+                <p>You rated this movie with {rated?.userRating} 🌟.</p>
+              ) : (
+                <>
+                  <StarRating userrating={setUserRating} />
+
+                  {userRating && (
+                    <button className="btn-add" onClick={handleAddWatched}>
+                      + Add to list
+                    </button>
+                  )}
+                </>
+              )}
             </div>
             <p>
               <em>{plot}</em>
